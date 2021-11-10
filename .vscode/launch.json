@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": "data.txt"
+        },
+        {
+            "type": "java",
+            "name": "Launch Graphs",
+            "request": "launch",
+            "mainClass": "proj2.Graphs",
+            "projectName": "graphs_406f30c6",
+            "args": "data.txt"
+        }
+    ]
+}
