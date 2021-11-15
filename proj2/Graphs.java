@@ -14,17 +14,13 @@ import gui.ChartFrame;
 
 public class Graphs { 
     public static void main(String[] args) { 
-        // Create your own chart by calling a createMyChart() method, and 
-        // provide a title accordingly 
+        //generate main window
+        new ChartFrame("Graphing Application");
+    } 
 
-        //CChart aChart = createDummyChart(); 
-
-        if(args.length != 1){
-            System.out.println("Improper Usage: Please specify filename as command line argument");
-            return;
-        }
-        String filename = args[0];
-                
+    public static void graph(String title){
+        //try to graph the chosen filename
+        String filename = title;
         CChart aChart;
         try{
             aChart = createChart(filename);
@@ -39,16 +35,10 @@ public class Graphs {
             System.out.println("");
             return;
         }
-
-
         new ChartFrame(aChart.title, aChart); 
-    } 
+    }
 
-    // Create your own chart by reading data from a file, handle exceptions  
-    // properly, and think about line chart, scatter chart (with dots), and 
-    // bar chart, etc. 
-
-    private static CChart createChart(String filename) throws FileNotFoundException, NoSuchElementException{ 
+    public static CChart createChart(String filename) throws FileNotFoundException, NoSuchElementException{ 
 
         int x1=0, x2=0, y1=0, y2=0;
         Random randomNumbers = new Random(); 
