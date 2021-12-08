@@ -1,9 +1,8 @@
 //ChartPanel.java
 package gui; 
 
-import java.awt.Color; 
-import java.awt.Graphics; 
-import javax.swing.JPanel; 
+import java.awt.*; 
+import javax.swing.*; 
 import framework.CChart; 
 
 public class ChartPanel extends JPanel { 

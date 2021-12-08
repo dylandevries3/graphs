@@ -3,6 +3,7 @@ package proj2;
 
 import java.awt.Color;
 import java.io.*;
+import java.text.BreakIterator;
 import java.util.*;
 
 import framework.AShape; 
@@ -12,18 +13,23 @@ import framework.CBar;
 import framework.CScatter; 
 import gui.ChartFrame; 
 
+enum graph{
+    LINE,
+    SCATTER,
+    BAR
+}
+
 public class Graphs { 
     public static void main(String[] args) { 
         //generate main window
         new ChartFrame("Graphing Application");
     } 
 
-    public static void graph(String title){
+    public static void graph(String filename, int graph_type, String title){
         //try to graph the chosen filename
-        String filename = title;
         CChart aChart;
         try{
-            aChart = createChart(filename);
+            aChart = createChart(filename, graph_type, title);
         }
         catch(FileNotFoundException exc){
             System.out.println("File Not Found");
@@ -38,54 +44,63 @@ public class Graphs {
         new ChartFrame(aChart.title, aChart); 
     }
 
-    public static CChart createChart(String filename) throws FileNotFoundException, NoSuchElementException{ 
+    public static CChart createChart(String filename, int g, String title) throws FileNotFoundException, NoSuchElementException{ 
 
-        int x1=0, x2=0, y1=0, y2=0;
+        int point, offset = 0;
         Random randomNumbers = new Random(); 
-        String title = "";
-        int offset =0;
         List<AShape> list = new ArrayList<AShape>();
-
-
+        Queue<Integer> q = new PriorityQueue<Integer>();
         Scanner dataFile = new Scanner(new File(filename));
+        graph graph_type; 
 
-        //gets lines and calls different create_chart methods based on how many ints per line
+        switch(g){
+            case 0:
+                graph_type = graph.LINE;
+                break;
+            case 1:
+                graph_type = graph.SCATTER;
+                break;
+            case 2:
+                graph_type = graph.BAR;
+                break;
+            default:
+                graph_type = graph.LINE;
+        }
+
         while(dataFile.hasNextLine()){
-
             String line = dataFile.nextLine();
             Scanner scanner = new Scanner(line);
             scanner.useDelimiter(" ");
 
-            if(scanner.hasNextInt() ){
-                x1 = scanner.nextInt();
-            
-                if(scanner.hasNextInt() ){
-                    y1 = scanner.nextInt();
+            //get numbers and add them onto queue
+            if(scanner.hasNextInt()){
+                point = scanner.nextInt();
+                q.add(point);
 
-                    if(scanner.hasNextInt() ){
-                        x2 = scanner.nextInt();
-                        
-
-                        //creates line graph because 4 ints per line
-                        if(scanner.hasNextInt() ){
-                            y2 = scanner.nextInt();
-                            Color color = new Color(randomNumbers.nextInt(256),  
-                            randomNumbers.nextInt(256),  
-                            randomNumbers.nextInt(256)); 
-                            list.add(new CLine(x1, y1, x2, y2, color));
-                        }
-                    }
-                    //creates scatter plot because 2 ints per line
-                    else{
-                        Color color = new Color(randomNumbers.nextInt(256),  
-                        randomNumbers.nextInt(256),  
-                        randomNumbers.nextInt(256)); 
-                        list.add(new CScatter(x1, y1, color));
-                    }
-
+                //line graph
+                //if line graph and 4 items are on queue then make new line object and add to list and clear queue
+                if(graph_type == graph.LINE && q.size() == 4){
+                    int x1= q.remove();
+                    int y1 = q.remove();
+                    int x2= q.remove();
+                    int y2 = q.remove();
+                    Color color = new Color(randomNumbers.nextInt(256),  
+                    randomNumbers.nextInt(256),  
+                    randomNumbers.nextInt(256)); 
+                    list.add(new CLine(x1, y1, x2, y2, color));
                 }
-                //creates bar chart, because one int per line
-                else{
+                //if scatter plot and 2 items are on queue then make new scatter object and add to list and clear queue
+                if(graph_type == graph.SCATTER && q.size() == 2){
+                    int x1= q.remove();
+                    int y1 = q.remove();
+                    Color color = new Color(randomNumbers.nextInt(256),  
+                    randomNumbers.nextInt(256),  
+                    randomNumbers.nextInt(256)); 
+                    list.add(new CScatter(x1, y1,color));
+                }
+                //if bar graph and 1 item on queue then make new bar object and add to list and clear queue
+                if(graph_type == graph.BAR && q.size() == 1){
+                    int x1= q.remove();
                     Color color = new Color(randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256)); 
@@ -93,16 +108,10 @@ public class Graphs {
                     offset += 28;
                 }
             }
-
-            else{
-                if(scanner.hasNext()) title = scanner.next();
-            }
             scanner.close();
         }
         AShape[] shapes = new AShape[list.size()];
-
-       list.toArray(shapes);
-
+        list.toArray(shapes);
         CChart ret = new CChart(shapes);
         ret.title = title;
         return ret; 
