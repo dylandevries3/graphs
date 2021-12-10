@@ -45,8 +45,8 @@ public class Graphs {
     }
 
     public static CChart createChart(String filename, int g, String title) throws FileNotFoundException, NoSuchElementException{ 
-
-        int point, offset = 0;
+        Integer offset = 0;
+        int point;
         Random randomNumbers = new Random(); 
         List<AShape> list = new ArrayList<AShape>();
         Queue<Integer> q = new PriorityQueue<Integer>();
@@ -87,7 +87,7 @@ public class Graphs {
                     Color color = new Color(randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256)); 
-                    list.add(new CLine(x1, y1, x2, y2, color));
+                    list.add(new CLine(Integer.valueOf(x1), Integer.valueOf(y1), Integer.valueOf(x2), Integer.valueOf(y2), color));
                 }
                 //if scatter plot and 2 items are on queue then make new scatter object and add to list and clear queue
                 if(graph_type == graph.SCATTER && q.size() == 2){
@@ -96,7 +96,7 @@ public class Graphs {
                     Color color = new Color(randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256)); 
-                    list.add(new CScatter(x1, y1,color));
+                    list.add(new CScatter(Integer.valueOf(x1), Integer.valueOf(y1), color));
                 }
                 //if bar graph and 1 item on queue then make new bar object and add to list and clear queue
                 if(graph_type == graph.BAR && q.size() == 1){
@@ -104,7 +104,7 @@ public class Graphs {
                     Color color = new Color(randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256),  
                     randomNumbers.nextInt(256)); 
-                    list.add(new CBar(x1, offset, color));
+                    list.add(new CBar(Integer.valueOf(x1), offset, color));
                     offset += 28;
                 }
             }
